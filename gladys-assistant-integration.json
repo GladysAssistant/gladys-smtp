@@ -1,0 +1,187 @@
+{
+  "manifest_version": 1,
+  "type": "communication",
+  "name": "SMTP",
+  "description": {
+    "en": "Send emails from Gladys through your own SMTP server.",
+    "fr": "Envoyez des emails depuis Gladys via votre propre serveur SMTP."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/gladysassistant/gladys-smtp:1.0.0",
+  "gladys_version": ">=4.62.0",
+  "cover_image": "https://raw.githubusercontent.com/GladysAssistant/gladys-smtp/main/cover.png",
+  "messaging": { "receive": false },
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": { "en": "Your SMTP server", "fr": "Votre serveur SMTP" },
+      "description": {
+        "en": "Gladys sends its notifications as emails through the SMTP server you configure here. Any provider works: your mailbox provider, a transactional service, or a mail server on your LAN. Each user then enters their own email address in the \"My account\" block below.",
+        "fr": "Gladys envoie ses notifications par email via le serveur SMTP configuré ici. N'importe quel fournisseur convient : votre fournisseur de messagerie, un service transactionnel, ou un serveur mail de votre réseau local. Chaque utilisateur renseigne ensuite sa propre adresse email dans le bloc « Mon compte » ci-dessous."
+      },
+      "links": [
+        {
+          "url": "https://github.com/GladysAssistant/gladys-smtp/blob/main/docs/en.md",
+          "label": { "en": "Setup guide", "fr": "Guide de configuration" }
+        }
+      ]
+    },
+    {
+      "key": "host",
+      "type": "string",
+      "label": { "en": "SMTP server", "fr": "Serveur SMTP" },
+      "description": {
+        "en": "Hostname or IP address of the SMTP server, e.g. smtp.gmail.com.",
+        "fr": "Nom d'hôte ou adresse IP du serveur SMTP, par exemple smtp.gmail.com."
+      },
+      "placeholder": { "en": "smtp.example.com", "fr": "smtp.exemple.com" },
+      "required": true
+    },
+    {
+      "key": "port",
+      "type": "number",
+      "label": { "en": "Port", "fr": "Port" },
+      "description": {
+        "en": "587 for STARTTLS (most common), 465 for implicit TLS, 25 for a local relay.",
+        "fr": "587 pour STARTTLS (le plus courant), 465 pour TLS implicite, 25 pour un relais local."
+      },
+      "required": true,
+      "default": 587,
+      "min": 1,
+      "max": 65535
+    },
+    {
+      "key": "security",
+      "type": "select",
+      "label": { "en": "Encryption", "fr": "Chiffrement" },
+      "description": {
+        "en": "How the connection is secured. Pick STARTTLS on port 587, TLS on port 465.",
+        "fr": "Comment la connexion est sécurisée. Choisissez STARTTLS sur le port 587, TLS sur le port 465."
+      },
+      "required": true,
+      "default": "starttls",
+      "options": [
+        {
+          "value": "starttls",
+          "label": { "en": "STARTTLS (port 587)", "fr": "STARTTLS (port 587)" }
+        },
+        {
+          "value": "tls",
+          "label": { "en": "TLS / SSL (port 465)", "fr": "TLS / SSL (port 465)" }
+        },
+        {
+          "value": "none",
+          "label": { "en": "None (local relay only)", "fr": "Aucun (relais local uniquement)" }
+        }
+      ]
+    },
+    {
+      "key": "username",
+      "type": "string",
+      "label": { "en": "Username", "fr": "Nom d'utilisateur" },
+      "description": {
+        "en": "SMTP account used to authenticate. Leave empty for a relay that accepts anonymous submissions.",
+        "fr": "Compte SMTP utilisé pour l'authentification. Laissez vide pour un relais acceptant les envois anonymes."
+      },
+      "placeholder": { "en": "you@example.com", "fr": "vous@exemple.com" },
+      "required": false
+    },
+    {
+      "key": "password",
+      "type": "secret",
+      "label": { "en": "Password", "fr": "Mot de passe" },
+      "description": {
+        "en": "SMTP password. With Gmail, Outlook or iCloud, generate a dedicated app password instead of using your account password.",
+        "fr": "Mot de passe SMTP. Avec Gmail, Outlook ou iCloud, générez un mot de passe d'application dédié plutôt que celui de votre compte."
+      },
+      "required": false
+    },
+    {
+      "key": "from_email",
+      "type": "string",
+      "label": { "en": "Sender address", "fr": "Adresse d'expédition" },
+      "description": {
+        "en": "Address the emails are sent from. Most providers require it to match the authenticated account.",
+        "fr": "Adresse depuis laquelle les emails sont envoyés. La plupart des fournisseurs exigent qu'elle corresponde au compte authentifié."
+      },
+      "placeholder": { "en": "gladys@example.com", "fr": "gladys@exemple.com" },
+      "required": true
+    },
+    {
+      "key": "from_name",
+      "type": "string",
+      "label": { "en": "Sender name", "fr": "Nom de l'expéditeur" },
+      "description": {
+        "en": "Display name shown in the recipient's mailbox.",
+        "fr": "Nom affiché dans la boîte de réception du destinataire."
+      },
+      "required": false,
+      "default": "Gladys Assistant"
+    },
+    {
+      "key": "subject_prefix",
+      "type": "string",
+      "label": { "en": "Subject prefix", "fr": "Préfixe du sujet" },
+      "description": {
+        "en": "Prepended to every subject, which is built from the first line of the message. Leave empty for no prefix.",
+        "fr": "Ajouté devant chaque sujet, construit à partir de la première ligne du message. Laissez vide pour ne pas en mettre."
+      },
+      "required": false,
+      "default": "Gladys"
+    },
+    {
+      "key": "reject_unauthorized",
+      "type": "boolean",
+      "label": { "en": "Verify the TLS certificate", "fr": "Vérifier le certificat TLS" },
+      "description": {
+        "en": "Keep it on. Turn it off only for a local mail server using a self-signed certificate.",
+        "fr": "Gardez-le activé. Ne le désactivez que pour un serveur mail local utilisant un certificat auto-signé."
+      },
+      "required": false,
+      "default": true
+    }
+  ],
+  "contact_schema": [
+    {
+      "key": "email",
+      "type": "string",
+      "label": { "en": "My email address", "fr": "Mon adresse email" },
+      "description": {
+        "en": "Address Gladys sends your notifications to.",
+        "fr": "Adresse à laquelle Gladys envoie vos notifications."
+      },
+      "placeholder": { "en": "you@example.com", "fr": "vous@exemple.com" },
+      "required": true
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": { "en": "Test the SMTP connection", "fr": "Tester la connexion SMTP" },
+      "description": {
+        "en": "Opens a connection to the server and authenticates, without sending anything.",
+        "fr": "Ouvre une connexion vers le serveur et s'authentifie, sans rien envoyer."
+      },
+      "timeout_seconds": 45
+    },
+    {
+      "key": "send_test_email",
+      "label": { "en": "Send a test email", "fr": "Envoyer un email de test" },
+      "description": {
+        "en": "Sends a real email so you can check it actually lands in the mailbox.",
+        "fr": "Envoie un vrai email pour vérifier qu'il arrive bien dans la boîte de réception."
+      },
+      "timeout_seconds": 60,
+      "fields": [
+        {
+          "key": "to",
+          "type": "string",
+          "label": { "en": "Recipient", "fr": "Destinataire" },
+          "placeholder": { "en": "you@example.com", "fr": "vous@exemple.com" },
+          "required": true
+        }
+      ]
+    }
+  ]
+}
