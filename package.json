@@ -1,6 +1,6 @@
 {
   "name": "gladys-smtp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "SMTP external integration for Gladys Assistant: send emails from Gladys through any SMTP server.",
   "type": "module",
