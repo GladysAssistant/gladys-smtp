@@ -13,6 +13,7 @@
   "messaging": {
     "receive": false
   },
+  "transports": ["cloud"],
   "config_schema": [
     {
       "key": "intro",
