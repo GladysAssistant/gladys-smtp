@@ -23,6 +23,12 @@ test('SMTP is declared as a send-only communication channel', () => {
   assert.ok(Array.isArray(manifest.contact_schema) && manifest.contact_schema.length > 0);
 });
 
+test('SMTP declares a single transport, so Gladys shows no "prefer local" toggle', () => {
+  // The integration talks to the one SMTP server the user configures: there is
+  // no local/cloud alternative to choose between per device.
+  assert.deepEqual(manifest.transports, ['cloud']);
+});
+
 test('the contact field the code reads is the one the manifest declares', () => {
   const email = manifest.contact_schema.find((field) => field.key === 'email');
   assert.ok(email, 'buildMail() reads contact.email: the manifest must declare it');
