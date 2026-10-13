@@ -85,6 +85,19 @@ test('every manifest action is wired', async () => {
   assert.equal(factory.state.sent.at(-1).to, 'alice@example.com');
 });
 
+test('the send_email scene action is wired and returns its outputs', async () => {
+  const { gladys, factory } = await start();
+
+  const ack = await gladys.fake.sceneAction('send_email', {
+    to: 'neighbour@example.com',
+    body: 'Temperature in the greenhouse: 2 °C',
+  });
+
+  assert.equal(ack.success, true);
+  assert.deepEqual(ack.data.outputs, { message_id: '<test-1@gladys>' });
+  assert.equal(factory.state.sent[0].to, 'neighbour@example.com');
+});
+
 test('a configuration update rebuilds the transport and refreshes the status', async () => {
   const { gladys, factory } = await start({ config: {} });
 

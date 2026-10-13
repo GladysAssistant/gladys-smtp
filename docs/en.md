@@ -74,6 +74,25 @@ so a mailbox list stays readable without opening anything.
 When the message carries an image — a camera snapshot, for instance — it is
 attached to the email and displayed inline in the body.
 
+## Sending an email from a scene
+
+The notifications only reach Gladys users, at their own address. To write to
+anyone else — a neighbour, a shared mailbox, the property manager — add the
+**Send an email** action to a scene (category _Integrations_ of the action
+picker):
+
+- **Recipients**: one address, or several separated by commas (10 at most).
+- **Subject**: optional. When empty, the first line of the message is used.
+  The subject prefix of the configuration is added in both cases.
+- **Message**: the body of the email.
+
+All three fields accept the scene variables, e.g. the temperature that
+triggered the scene. The action returns the **Email identifier** (the
+`Message-ID`) to the following actions of the scene. If the email cannot be
+sent, the action fails and the scene logs the reason, then goes on.
+
+This action requires Gladys 5.1 or later.
+
 ## Troubleshooting
 
 - **"authentication refused by the server"** — wrong username or password. On

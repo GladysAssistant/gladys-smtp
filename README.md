@@ -39,7 +39,8 @@ reaches the integration always has a recipient.
 │  ├─ config.js                      # config defaults, normalization, "is it usable?"
 │  ├─ message.js                     # Gladys message -> email (subject, HTML, attachment)
 │  ├─ smtp.js                        # nodemailer transport, verify/send, readable errors
-│  └─ actions.js                     # the two buttons of the Configuration screen
+│  ├─ actions.js                     # the two buttons of the Configuration screen
+│  └─ sceneActions.js                # the "Send an email" scene action
 ├─ docs/
 │  ├─ en.md                          # user documentation, re-hosted by Gladys and
 │  └─ fr.md                          #   linked from the Configuration screen
@@ -85,6 +86,19 @@ Both are rendered as buttons in the Configuration screen:
 - **Send a test email** — sends a real email to an address typed in the form,
   because only a real delivery proves the spam folder is not where the
   notifications will land.
+
+## Scene action
+
+**Send an email** (`scene_actions` → `send_email`) lets a scene write to any
+address, not only to the Gladys users: recipients (comma or semicolon
+separated, 10 at most), an optional subject (the first line of the message
+otherwise), and a body — all three accept scene variables, resolved by the
+core before the action reaches the integration. It returns `message_id` to the
+following actions. The subject goes through the same `buildSubject` as the
+notifications, so a variable cannot inject a line break into the header.
+
+Declaring `scene_actions` requires `gladys_version >= 5.1.0`: older cores reject
+the unknown manifest field at install time.
 
 ## Run it locally
 
@@ -137,7 +151,7 @@ update in every Gladys.
 
 ## Notes
 
-- Requires **Node.js ≥ 20**.
+- Requires **Node.js ≥ 20** and **Gladys ≥ 5.1.0** (scene actions).
 - `cover.png` is the catalog cover (800×534, ≤150 KB, PNG or JPEG).
 - Texts are capped at 4096 characters by Gladys (contract B.15).
 

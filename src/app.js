@@ -12,6 +12,7 @@ import { isConfigured, missingConfigKeys, normalizeConfig } from './config.js';
 import { buildMail } from './message.js';
 import { SmtpClient } from './smtp.js';
 import { ACTIONS } from './actions.js';
+import { SCENE_ACTIONS } from './sceneActions.js';
 
 const logger = createLogger({ name: 'app' });
 
@@ -85,6 +86,13 @@ export function registerHandlers(gladys, deps = {}) {
   // message is displayed under the button.
   for (const [key, handler] of Object.entries(ACTIONS)) {
     gladys.onAction(key, (fields) => handler(smtp, config, fields));
+  }
+
+  // --- Scene actions: the "Send an email" card of the scene editor ----------
+  // `fields` arrive resolved (scene variables substituted, validated by the
+  // core); the resolved object carries the declared `outputs`.
+  for (const [key, handler] of Object.entries(SCENE_ACTIONS)) {
+    gladys.onSceneAction(key, (fields) => handler(smtp, config, fields));
   }
 
   // --- Configuration updated by the user -------------------------------------
