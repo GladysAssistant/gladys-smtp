@@ -33,8 +33,9 @@ reaches the integration always has a recipient.
 
 ```
 .
-├─ index.js                          # SDK bootstrap + event wiring (no SMTP logic)
+├─ index.js                          # SDK bootstrap only
 ├─ src/
+│  ├─ app.js                         # handler wiring (messages, actions, config, status)
 │  ├─ config.js                      # config defaults, normalization, "is it usable?"
 │  ├─ message.js                     # Gladys message -> email (subject, HTML, attachment)
 │  ├─ smtp.js                        # nodemailer transport, verify/send, readable errors
@@ -112,7 +113,10 @@ The same three gates run on every push and pull request
 ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)). The tests cover the
 configuration normalization, the email building, the transport options and the
 actions — the SMTP dialogue itself is driven through an injected fake
-transport, so `npm test` needs no mail server.
+transport, so `npm test` needs no mail server. The wiring of `src/app.js` is
+tested end to end against `createFakeGladys()` from
+`@gladysassistant/integration-sdk/testing`: the SDK's in-memory Gladys sends the
+messages, clicks the buttons and records the connection statuses.
 
 ## Validate before publishing
 
