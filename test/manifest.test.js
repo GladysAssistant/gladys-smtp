@@ -63,6 +63,12 @@ test('the send_email scene action declares the fields and output the handler use
   );
 });
 
+test('the integration is shelved under the notifications category of the catalog', () => {
+  // Without it the catalog relies on the store fallback mapping, meant to
+  // shrink, and lists the integration uncategorized once it is gone.
+  assert.deepEqual(manifest.categories, ['notifications']);
+});
+
 test('scene actions require a Gladys that knows them', () => {
   // The store indexer refuses `scene_actions` below 5.1.0: older cores reject
   // the unknown manifest field at install time.
