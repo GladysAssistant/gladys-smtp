@@ -79,6 +79,27 @@ pour qu'une liste de boîte de réception reste lisible sans rien ouvrir.
 Quand le message contient une image — une capture de caméra par exemple —
 elle est jointe à l'email et affichée directement dans le corps du message.
 
+## Envoyer un email depuis une scène
+
+Les notifications ne vont qu'aux utilisateurs de Gladys, à leur propre
+adresse. Pour écrire à quelqu'un d'autre — un voisin, une boîte partagée, le
+syndic — ajoutez l'action **Envoyer un email** à une scène (catégorie
+_Intégrations_ du sélecteur d'actions) :
+
+- **Destinataires** : une adresse, ou plusieurs séparées par des virgules
+  (10 au maximum).
+- **Sujet** : facultatif. S'il est vide, la première ligne du message est
+  utilisée. Le préfixe du sujet de la configuration est ajouté dans les deux
+  cas.
+- **Message** : le corps de l'email.
+
+Les trois champs acceptent les variables de scène, par exemple la température
+qui a déclenché la scène. L'action renvoie l'**Identifiant de l'email** (le
+`Message-ID`) aux actions suivantes de la scène. Si l'email ne peut pas partir,
+l'action échoue et la scène en note la raison, puis continue.
+
+Cette action nécessite Gladys 5.1 ou plus récent.
+
 ## Dépannage
 
 - **« authentication refused by the server »** — nom d'utilisateur ou mot de

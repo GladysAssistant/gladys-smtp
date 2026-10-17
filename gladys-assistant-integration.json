@@ -8,8 +8,9 @@
   },
   "version": "1.0.1",
   "docker_image": "ghcr.io/gladysassistant/gladys-smtp:1.0.1",
-  "gladys_version": ">=4.62.0",
+  "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/GladysAssistant/gladys-smtp/main/cover.png",
+  "categories": ["notifications"],
   "messaging": {
     "receive": false
   },
@@ -252,6 +253,79 @@
             "fr": "vous@exemple.com"
           },
           "required": true
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "send_email",
+      "label": {
+        "en": "Send an email",
+        "fr": "Envoyer un email"
+      },
+      "description": {
+        "en": "Send an email to any address, through the SMTP server of the integration.",
+        "fr": "Envoie un email à n'importe quelle adresse, via le serveur SMTP de l'intégration."
+      },
+      "timeout_seconds": 60,
+      "fields": [
+        {
+          "key": "to",
+          "type": "string",
+          "label": {
+            "en": "Recipients",
+            "fr": "Destinataires"
+          },
+          "description": {
+            "en": "One address, or several separated by commas (10 at most).",
+            "fr": "Une adresse, ou plusieurs séparées par des virgules (10 au maximum)."
+          },
+          "placeholder": {
+            "en": "neighbour@example.com",
+            "fr": "voisin@exemple.com"
+          },
+          "required": true
+        },
+        {
+          "key": "subject",
+          "type": "string",
+          "label": {
+            "en": "Subject",
+            "fr": "Sujet"
+          },
+          "description": {
+            "en": "Optional: the first line of the message is used when empty. The subject prefix of the configuration is added.",
+            "fr": "Facultatif : la première ligne du message est utilisée s'il est vide. Le préfixe du sujet de la configuration est ajouté."
+          },
+          "required": false
+        },
+        {
+          "key": "body",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message"
+          },
+          "description": {
+            "en": "Scene variables are accepted, e.g. the temperature that triggered the scene.",
+            "fr": "Les variables de scène sont acceptées, par exemple la température qui a déclenché la scène."
+          },
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "message_id",
+          "type": "string",
+          "label": {
+            "en": "Email identifier",
+            "fr": "Identifiant de l'email"
+          },
+          "description": {
+            "en": "Message-ID assigned to the sent email.",
+            "fr": "Message-ID attribué à l'email envoyé."
+          }
         }
       ]
     }

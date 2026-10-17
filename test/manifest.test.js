@@ -10,6 +10,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { ACTIONS } from '../src/actions.js';
 import { DEFAULT_CONFIG } from '../src/config.js';
+import { SCENE_ACTIONS } from '../src/sceneActions.js';
 
 const manifest = JSON.parse(
   await readFile(new URL('../gladys-assistant-integration.json', import.meta.url), 'utf8'),
@@ -39,6 +40,39 @@ test('the contact field the code reads is the one the manifest declares', () => 
 test('every manifest action has a registered handler, and vice versa', () => {
   const declared = (manifest.actions ?? []).map((action) => action.key).sort();
   assert.deepEqual(declared, Object.keys(ACTIONS).sort());
+});
+
+test('every manifest scene action has a registered handler, and vice versa', () => {
+  const declared = (manifest.scene_actions ?? []).map((action) => action.key).sort();
+  assert.deepEqual(declared, Object.keys(SCENE_ACTIONS).sort());
+});
+
+test('the send_email scene action declares the fields and output the handler uses', () => {
+  const action = manifest.scene_actions.find((a) => a.key === 'send_email');
+  const fields = Object.fromEntries(action.fields.map((field) => [field.key, field]));
+  assert.equal(fields.to?.required, true, 'sendEmail() needs fields.to');
+  assert.equal(fields.body?.required, true, 'sendEmail() reads fields.body');
+  assert.equal(fields.subject?.required, false, 'the subject falls back to the message');
+  for (const field of action.fields) {
+    // Only string fields receive the scene variables ({{...}}).
+    assert.equal(field.type, 'string', `"${field.key}" must accept scene variables`);
+  }
+  assert.deepEqual(
+    action.outputs.map((output) => output.key),
+    ['message_id'],
+  );
+});
+
+test('the integration is shelved under the notifications category of the catalog', () => {
+  // Without it the catalog relies on the store fallback mapping, meant to
+  // shrink, and lists the integration uncategorized once it is gone.
+  assert.deepEqual(manifest.categories, ['notifications']);
+});
+
+test('scene actions require a Gladys that knows them', () => {
+  // The store indexer refuses `scene_actions` below 5.1.0: older cores reject
+  // the unknown manifest field at install time.
+  assert.equal(manifest.gladys_version, '>=5.1.0');
 });
 
 test('the send_test_email form declares the field the handler reads', () => {
@@ -112,6 +146,11 @@ test('every label and description carries at least English', () => {
     ...manifest.contact_schema,
     ...manifest.actions,
     ...manifest.actions.flatMap((action) => action.fields ?? []),
+    ...manifest.scene_actions,
+    ...manifest.scene_actions.flatMap((action) => [
+      ...(action.fields ?? []),
+      ...(action.outputs ?? []),
+    ]),
   ];
   for (const field of fields) {
     assert.ok(field.label.en, `"${field.key}" needs an English label`);
