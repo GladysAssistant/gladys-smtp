@@ -1,5 +1,7 @@
 # SMTP
 
+## Présentation
+
 Cette intégration permet à Gladys d'envoyer des emails via **votre propre
 serveur SMTP** — votre fournisseur de messagerie (Gmail, Outlook, iCloud,
 Fastmail…), un service transactionnel (Brevo, Mailgun, Postmark, Amazon SES…)
@@ -9,7 +11,7 @@ Une fois installée, « email » devient un canal de notification : vos scénari
 peuvent vous envoyer un message, et Gladys peut vous joindre même quand vous
 n'êtes pas devant l'application.
 
-## Comment ça marche
+### Comment ça marche
 
 Il y a deux niveaux de réglages, et ce ne sont pas les mêmes :
 
@@ -21,7 +23,32 @@ Il y a deux niveaux de réglages, et ce ne sont pas les mêmes :
   notifications. Un utilisateur qui laisse le champ vide est simplement
   ignoré : Gladys ne lui envoie jamais d'email.
 
-## Configurer le serveur SMTP
+### À quoi ressemble un email
+
+Le message envoyé par Gladys devient le corps de l'email. Son **sujet** est
+construit à partir de la première ligne du message (précédée de votre préfixe),
+pour qu'une liste de boîte de réception reste lisible sans rien ouvrir.
+
+Quand le message contient une image — une capture de caméra par exemple —
+elle est jointe à l'email et affichée directement dans le corps du message.
+
+## Prérequis
+
+- **Gladys 5.1 ou plus récent.**
+- **Un compte SMTP pour l'envoi** : le nom du serveur, le port, le mode de
+  chiffrement et, sauf pour un relais local acceptant les envois anonymes, un
+  nom d'utilisateur et un mot de passe. Les réglages des fournisseurs courants
+  sont donnés plus bas.
+- **Un mot de passe d'application** pour Gmail, Outlook et iCloud, qui
+  refusent le mot de passe du compte (voir plus bas).
+- **Un accès réseau** depuis la machine qui fait tourner Gladys jusqu'au
+  serveur SMTP, sur le port choisi (587, 465 ou 25).
+- **Une adresse email pour chaque utilisateur de Gladys** qui souhaite
+  recevoir les notifications.
+
+## Configuration
+
+### Configurer le serveur SMTP
 
 1. Ouvrez l'onglet **Configuration** de l'intégration.
 2. Renseignez les réglages de votre fournisseur :
@@ -46,7 +73,7 @@ Il y a deux niveaux de réglages, et ce ne sont pas les mêmes :
    y compris dans les spams, ce qu'aucun test de connexion ne peut faire à
    votre place.
 
-### Réglages des fournisseurs courants
+#### Réglages des fournisseurs courants
 
 | Fournisseur         | Serveur                             | Port | Chiffrement |
 | ------------------- | ----------------------------------- | ---- | ----------- |
@@ -64,20 +91,11 @@ Il y a deux niveaux de réglages, et ce ne sont pas les mêmes :
 > collez celui-ci dans le champ **Mot de passe**. Le révoquer plus tard coupe
 > Gladys uniquement, pas votre compte.
 
-## Recevoir les notifications
+### Recevoir les notifications
 
 1. Toujours dans l'onglet **Configuration**, repérez le bloc **Mon compte**.
 2. Saisissez **votre** adresse email et enregistrez.
 3. Chaque utilisateur de Gladys fait de même, avec sa propre adresse.
-
-## À quoi ressemble un email
-
-Le message envoyé par Gladys devient le corps de l'email. Son **sujet** est
-construit à partir de la première ligne du message (précédée de votre préfixe),
-pour qu'une liste de boîte de réception reste lisible sans rien ouvrir.
-
-Quand le message contient une image — une capture de caméra par exemple —
-elle est jointe à l'email et affichée directement dans le corps du message.
 
 ## Envoyer un email depuis une scène
 
@@ -102,12 +120,24 @@ Cette action nécessite Gladys 5.1 ou plus récent.
 
 ## Dépannage
 
+Le statut de l'intégration, dans son onglet **Configuration**, vous indique si
+Gladys parvient à joindre le serveur SMTP, et sinon pourquoi.
+
+- **« Serveur SMTP pas encore configuré. »** — le champ **Serveur SMTP**,
+  **Port** ou **Adresse d'expédition** est vide. Remplissez-les et
+  enregistrez.
 - **« authentication refused by the server »** — nom d'utilisateur ou mot de
   passe incorrect. Sur Gmail, Outlook et iCloud, c'est presque toujours le mot
   de passe du compte utilisé à la place d'un mot de passe d'application.
 - **« cannot reach the server »** — nom d'hôte ou port incorrect, ou pare-feu
   bloquant le SMTP sortant. Certains fournisseurs d'accès bloquent le port 25
   sur les lignes résidentielles : utilisez 587 ou 465.
+- **« the server hostname could not be resolved »** — le nom du **Serveur
+  SMTP** est mal orthographié, ou la machine qui fait tourner Gladys ne
+  parvient pas à le résoudre.
+- **« the server did not answer in time »** — le serveur est indisponible, ou
+  un pare-feu bloque la connexion sans répondre. Vérifiez le nom du serveur et
+  le port.
 - **« the TLS handshake failed »** — le mode de chiffrement ne correspond pas
   au port. Le port 465 exige **TLS / SSL**, le port 587 exige **STARTTLS**.
 - **« the server refused the sender or the recipient address »** — l'adresse
@@ -120,5 +150,6 @@ Cette action nécessite Gladys 5.1 ou plus récent.
   en possédez un.
 
 L'intégration journalise tout ce qu'elle fait : ouvrez les logs de
-l'intégration depuis l'interface de Gladys (ou `docker logs` sur l'hôte), avec
+l'intégration depuis l'interface de Gladys (les **Journaux** de
+l'intégration, sur sa page), ou `docker logs` sur l'hôte, avec
 `LOG_LEVEL=debug` pour le détail complet du dialogue SMTP.
