@@ -10,15 +10,11 @@
   "docker_image": "ghcr.io/gladysassistant/gladys-smtp:1.1.0",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/GladysAssistant/gladys-smtp/main/cover.png",
-  "categories": [
-    "notifications"
-  ],
+  "categories": ["notifications"],
   "messaging": {
     "receive": false
   },
-  "transports": [
-    "cloud"
-  ],
+  "transports": ["cloud"],
   "config_schema": [
     {
       "key": "intro",
