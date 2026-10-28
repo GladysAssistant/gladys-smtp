@@ -109,15 +109,14 @@ triggered the scene. The action returns the **Email identifier** (the
 `Message-ID`) to the following actions of the scene. If the email cannot be
 sent, the action fails and the scene logs the reason, then goes on.
 
-This action requires Gladys 5.1 or later.
-
 ## Troubleshooting
 
 The status of the integration, in its **Configuration** tab, tells you whether
 Gladys can reach the SMTP server, and why not.
 
-- **"SMTP server not configured yet."** — the **SMTP server**, **Port** or
-  **Sender address** field is empty. Fill them in and save.
+- **"SMTP server not configured yet."** — the **SMTP server** or **Sender
+  address** field is empty. Fill them in and save. An empty **Port** is not
+  reported: the integration uses 587 instead.
 - **"authentication refused by the server"** — wrong username or password. On
   Gmail, Outlook and iCloud, this is almost always the account password used
   instead of an app password.

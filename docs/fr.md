@@ -116,16 +116,14 @@ qui a déclenché la scène. L'action renvoie l'**Identifiant de l'email** (le
 `Message-ID`) aux actions suivantes de la scène. Si l'email ne peut pas partir,
 l'action échoue et la scène en note la raison, puis continue.
 
-Cette action nécessite Gladys 5.1 ou plus récent.
-
 ## Dépannage
 
 Le statut de l'intégration, dans son onglet **Configuration**, vous indique si
 Gladys parvient à joindre le serveur SMTP, et sinon pourquoi.
 
-- **« Serveur SMTP pas encore configuré. »** — le champ **Serveur SMTP**,
-  **Port** ou **Adresse d'expédition** est vide. Remplissez-les et
-  enregistrez.
+- **« Serveur SMTP pas encore configuré. »** — le champ **Serveur SMTP** ou
+  **Adresse d'expédition** est vide. Remplissez-les et enregistrez. Un champ
+  **Port** vide n'est pas signalé : l'intégration utilise alors 587.
 - **« authentication refused by the server »** — nom d'utilisateur ou mot de
   passe incorrect. Sur Gmail, Outlook et iCloud, c'est presque toujours le mot
   de passe du compte utilisé à la place d'un mot de passe d'application.
